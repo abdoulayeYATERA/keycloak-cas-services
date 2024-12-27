@@ -13,6 +13,7 @@ public class AttributesAdapter extends XmlAdapter<AttributesWrapper, Map<String,
 
 	@Override
 	public Map<String, Object> unmarshal(final AttributesWrapper attributesWrapper) throws Exception {
+
 		return attributesWrapper.toMap();
 	}
 }

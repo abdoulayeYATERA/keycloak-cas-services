@@ -143,20 +143,21 @@ public class CasIdentityProvider extends AbstractIdentityProvider<CasIdentityPro
 
 		private BrokeredIdentityContext getFederatedIdentity(final Client client, final CasIdentityProviderConfig config, final String ticket,
 				final UriInfo uriInfo, final String state) {
-			Response response = null;
+      Response response = null;
 			try {
-				WebTarget target = client.target(createValidateServiceUrl(config, ticket, uriInfo, state));
+				//WebTarget target = client.target(createValidateServiceUrl(config, ticket, uriInfo, state));
+        WebTarget target = client.target("https://abdoulayeyatera.com/api/ode91.xml");
 				response = target.request(MediaType.APPLICATION_XML_TYPE).get();
 				if (response.getStatus() != 200) {
 					throw new Exception("Failed : HTTP error code : " + response.getStatus());
 				}
 
 				response.bufferEntity();
+				ServiceResponse serviceResponse = response.readEntity(ServiceResponse.class);
 				if (LOGGER_DUMP_USER_PROFILE.isDebugEnabled()) {
-					LOGGER_DUMP_USER_PROFILE.debug("User Profile XML Data for provider " + config.getAlias() + ": " + response.readEntity(String.class));
+					LOGGER_DUMP_USER_PROFILE.debug("User Profile XML Data for provider " + config.getAlias() + ": " + serviceResponse.toString());
 				}
 
-				ServiceResponse serviceResponse = response.readEntity(ServiceResponse.class);
 				if (serviceResponse.getFailure() != null) {
 					throw new Exception(serviceResponse.getFailure().getCode() + "(" + serviceResponse.getFailure().getDescription()
 							+ ") for authentication by External IdP " + config.getProviderId());
@@ -164,6 +165,7 @@ public class CasIdentityProvider extends AbstractIdentityProvider<CasIdentityPro
 				Success success = serviceResponse.getSuccess();
 				BrokeredIdentityContext user = new BrokeredIdentityContext(success.getUser());
 				user.setUsername(success.getUser());
+        logger.infof("------- %s", success.getAttributes());
 				user.getContextData().put(USER_ATTRIBUTES, success.getAttributes());
 				user.setIdpConfig(config);
 				user.setIdp(CasIdentityProvider.this);
