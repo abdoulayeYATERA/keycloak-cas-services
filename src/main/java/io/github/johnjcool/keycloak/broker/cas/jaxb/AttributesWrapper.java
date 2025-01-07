@@ -1,7 +1,7 @@
 package io.github.johnjcool.keycloak.broker.cas.jaxb;
 
 
-import io.jbock.util.Either;
+import io.github.johnjcool.keycloak.broker.cas.model.ENTFunction;
 import org.jboss.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,30 +10,29 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 import org.w3c.dom.Element;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-@XmlType
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AttributesWrapper {
 
-	private final List<JAXBElement<String>> attributes = new ArrayList<>();
-	private final List<io.github.johnjcool.keycloak.broker.cas.model.Function> mFunctions = new ArrayList<>();
-
 	@XmlAnyElement
+	private final List<JAXBElement<String>> attributes = new ArrayList<>();
+
+	@XmlElement(name="ENTPersonFunctions", namespace = "http://www.yale.edu/tp/cas")
+	private final List<ENTFunction> mENTFunctions = new ArrayList<>();
+
 	public List<JAXBElement<String>> getAttributes() {
 		return attributes;
 	}
 
-	@XmlAnyElement
-	public List<io.github.johnjcool.keycloak.broker.cas.model.Function> getmFunctions() {
-		return mFunctions;
+	public List<ENTFunction> getmENTFunctions() {
+		return mENTFunctions;
 	}
 
 	/**
@@ -45,21 +44,20 @@ public class AttributesWrapper {
 	 */
 	public Map<String, Object> toMap() {
 		// Note: Due to type erasure, you cannot use properties.stream() directly when unmashalling is used..
-		List<?> attrs = new ArrayList<>();
+		List<?> attrs = attributes;
     Logger logger = Logger.getLogger(AttributesWrapper.class);
-    logger.infof("------- %s", this.attributes);
 
 		Map<String, Object> allAttributesMap = attrs.stream().collect(Collectors.toMap(AttributesWrapper::extractLocalName, AttributesWrapper::extractTextContent));
 		ObjectMapper objectMapper = new ObjectMapper();
-		Function<List<io.github.johnjcool.keycloak.broker.cas.model.Function>, String> functionToJsonString =
+		Function<List<ENTFunction>, String> functionToJsonString =
 			(x) -> {
 				try {
-					return objectMapper.writeValueAsString(mFunctions);
+					return objectMapper.writeValueAsString(mENTFunctions);
 				} catch (JsonProcessingException e) {
           throw new RuntimeException(e);
         }
       };
-		String functionsJsonString = functionToJsonString.apply(mFunctions);
+		String functionsJsonString = functionToJsonString.apply(mENTFunctions);
 		allAttributesMap.put("functions", functionsJsonString);
 		return allAttributesMap;
 

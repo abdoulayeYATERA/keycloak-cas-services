@@ -1,18 +1,27 @@
 <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-	<cas:authenticationSuccess>
-		<cas:user>test</cas:user>
-		<!-- Begin Ldap Attributes -->
-		<cas:attributes>			
-			
-				<cas:mail>test.test@test.test</cas:mail>
-			
-				<cas:sn>tets</cas:sn>
-			
-				<cas:cn>test</cas:cn>
-						
-		</cas:attributes>
-		<!-- End Ldap Attributes -->
+  <cas:authenticationSuccess>
+    <cas:user>test</cas:user>
+    <!-- Begin Ldap Attributes -->
+    <cas:attributes>			
+
+      <cas:mail>test.test@test.test</cas:mail>
+
+      <cas:sn>test</cas:sn>
+
+      <cas:cn>test</cas:cn>
+
+      <cas:ENTPersonFunctions>
+        <cas:UAI>testuai1</cas:UAI>
+        <cas:function>testfunction</cas:function>
+        </cas:ENTPersonFunctions>
+
+      <cas:ENTPersonFunctions>
+        <cas:UAI>testuai2</cas:UAI>
+        <cas:function>testfunction</cas:function>
+        </cas:ENTPersonFunctions>
+      </cas:attributes>
+    <!-- End Ldap Attributes -->
 
 
-	</cas:authenticationSuccess>
-</cas:serviceResponse>
+    </cas:authenticationSuccess>
+  </cas:serviceResponse>
