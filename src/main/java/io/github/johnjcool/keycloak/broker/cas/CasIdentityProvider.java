@@ -145,8 +145,8 @@ public class CasIdentityProvider extends AbstractIdentityProvider<CasIdentityPro
 				final UriInfo uriInfo, final String state) {
       Response response = null;
 			try {
-				//WebTarget target = client.target(createValidateServiceUrl(config, ticket, uriInfo, state));
-        WebTarget target = client.target("https://abdoulayeyatera.com/api/ode91.xml");
+				WebTarget target = client.target(createValidateServiceUrl(config, ticket, uriInfo, state));
+        // WebTarget target = client.target("https://abdoulayeyatera.com/api/ode91.xml");
 				response = target.request(MediaType.APPLICATION_XML_TYPE).get();
 				if (response.getStatus() != 200) {
 					throw new Exception("Failed : HTTP error code : " + response.getStatus());
@@ -165,7 +165,12 @@ public class CasIdentityProvider extends AbstractIdentityProvider<CasIdentityPro
 				Success success = serviceResponse.getSuccess();
 				BrokeredIdentityContext user = new BrokeredIdentityContext(success.getUser());
 				user.setUsername(success.getUser());
-        //logger.infof("------- succes attribute %s", success.getAttributes());
+        // logger.infof("------- succes attribute %s", success.getAttributes());
+
+				//keycloak is strangely removing leading and trailing [ and ]
+				//so we add other ones
+				success.getAttributes().put("functions", "[" + success.getAttributes().get("functions") + "]");
+
 				user.getContextData().put(USER_ATTRIBUTES, success.getAttributes());
 				user.setIdpConfig(config);
 				user.setIdp(CasIdentityProvider.this);

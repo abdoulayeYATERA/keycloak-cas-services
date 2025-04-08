@@ -52,7 +52,9 @@ public class AttributesWrapper {
 		Function<List<ENTFunction>, String> functionToJsonString =
 			(x) -> {
 				try {
-					return objectMapper.writeValueAsString(mENTFunctions);
+				String a =objectMapper.writeValueAsString(mENTFunctions);
+				// logger.info("------ object mapper : " + a);
+        return a;
 				} catch (JsonProcessingException e) {
           throw new RuntimeException(e);
         }
