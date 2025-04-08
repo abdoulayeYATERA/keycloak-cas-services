@@ -146,7 +146,7 @@ public class CasIdentityProvider extends AbstractIdentityProvider<CasIdentityPro
       Response response = null;
 			try {
 				WebTarget target = client.target(createValidateServiceUrl(config, ticket, uriInfo, state));
-        // WebTarget target = client.target("https://abdoulayeyatera.com/api/ode91.xml");
+         // WebTarget target = client.target("https://abdoulayeyatera.com/api/ode91.xml");
 				response = target.request(MediaType.APPLICATION_XML_TYPE).get();
 				if (response.getStatus() != 200) {
 					throw new Exception("Failed : HTTP error code : " + response.getStatus());

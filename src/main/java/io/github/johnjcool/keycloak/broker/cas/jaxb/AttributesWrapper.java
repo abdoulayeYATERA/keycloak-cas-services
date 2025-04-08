@@ -52,14 +52,17 @@ public class AttributesWrapper {
 		Function<List<ENTFunction>, String> functionToJsonString =
 			(x) -> {
 				try {
-				String a =objectMapper.writeValueAsString(mENTFunctions);
-				// logger.info("------ object mapper : " + a);
+				String a =objectMapper.writeValueAsString(mENTFunctions)
+        .replaceAll("\"\\[", "\"")
+        .replaceAll("\\]\"", "\"")
+        .replaceAll(", ", ",");
         return a;
 				} catch (JsonProcessingException e) {
           throw new RuntimeException(e);
         }
       };
 		String functionsJsonString = functionToJsonString.apply(mENTFunctions);
+		// logger.info("------ object mapper : functionsJsonString : " + functionsJsonString);
 		allAttributesMap.put("functions", functionsJsonString);
 		return allAttributesMap;
 
